@@ -143,15 +143,21 @@ This step verifies you understand concepts that includes, but is not limited to 
 
 What naming convention will you use for the database, collections and fields used in the assessment scenario?
 
-> ANSWER_HERE
->
->
+>   For this assessment, the following naming conventions will be used:
+> - **Database and Collections**: `snake_case` (e.g., `my_database`, `movie_collection`). This convention is easy to read and avoids any potential issues with case sensitivity across different operating systems.
+> - **Fields**: `camelCase` (e.g., `runningTime`, `boxOfficeTakings`).
+
+
 
 Why did you choose this naming convention?
 
-> ANSWER_HERE
-> 
->
+> I chose these conventions because they are widely adopted standards in the MongoDB and broader software development community.
+
+> `camelCase` for fields aligns with the naming conventions of many programming languages, including JavaScript, which is used for MongoDB queries. This consistency makes the code more intuitive for developers.
+
+> `snake_case` for database and collection names enhances readability and prevents issues related to case sensitivity that can arise in different file systems and operating environments.
+
+
 
 ## 2.2 Identify Data Types
 
@@ -161,26 +167,32 @@ In the `notes` column, add any clarifying details that may be useful.
 
 Replace `FIELD_NAME_HERE` and `DATA_TYPE_HERE` in the table below.
 
-> | Item                | Field Name      | Data Type       | Notes                 |
-> |---------------------|-----------------|-----------------|-----------------------|
-> | ID                  | FIELD_NAME_HERE | DATA_TYPE_HERE  |                       |
-> | Title               | FIELD_NAME_HERE | DATA_TYPE_HERE  | four digit year       |
-> | Year                | FIELD_NAME_HERE | DATA_TYPE_HERE  |                       |
-> | Writer              | FIELD_NAME_HERE | DATA_TYPE_HERE  |                       |
-> | Summary             | FIELD_NAME_HERE | DATA_TYPE_HERE  |                       |
-> | Franchise           | FIELD_NAME_HERE | DATA_TYPE_HERE  |                       |
-> | Running Time        | FIELD_NAME_HERE | DATA_TYPE_HERE  | **min**utes               |
-> | Budget              | FIELD_NAME_HERE | DATA_TYPE_HERE  | **$m**illions            |
-> | Box Office Takings  | FIELD_NAME_HERE | DATA_TYPE_HERE  | **$m**illions, **$b**illions           |
+> | Item                | Field Name      | Data Type       | Notes                                |
+> |---------------------|-----------------|-----------------|--------------------------------------|
+> | ID                  | _id             | ObjectId        | MongoDB's default unique identifier. |
+> | Title               | title           |     string          |                                      |
+> | Year                | year            | Number          | four digit year                      |
+> | Writer              | writer          | String          |                                      |
+> | Summary             | synopsis        | String          |                                      |
+> | Franchise           | franchise       | String          |                                      |
+> | Running Time        | runningTime     | Number          | **min**utes                          |
+> | Budget              | budget          | Number          | **$m**illions                        |
+> | Box Office Takings  | boxOffice       | Number          | **$m**illions, **$b**illions         |
+
 
 
 ## 2.3 Defining Terms
 
 Briefly explain what is meant by the terms database, collection, document and field in terms of MongoDB.
 
-> ANSWER_HERE
->
-> 
+>  In MongoDB, the data is organized in a hierarchical manner:
+
+> - **Database**: A database is a top-level container for collections. A single MongoDB instance can host multiple databases, each acting as a separate namespace for its data.
+> - **Collection**: A collection is a grouping of MongoDB documents, analogous to a table in a relational database. Collections do not enforce a rigid schema, meaning documents within the same collection can have different fields.
+> - **Document**: A document is a single record within a collection, stored in BSON (Binary JSON) format. It consists of field-and-value pairs and is similar to a row in a relational table or a JSON object.
+> - **Field**: A field is a key-value pair within a document
+
+ 
 
 ## 2.4 NoSQL Database Types
 
@@ -243,7 +255,7 @@ The situations/application of the database types must be different.
 Add the Connection String used to connect to your MongoDB Atlas instance:
 
 > ```js
-> 	MONGODB_CONNECTION_STRING_HERE
+> 	mongodb+srv://<username>:<password>@<cluster-url>/?retryWrites=true&w=majority
 > ```
 
 
@@ -252,26 +264,38 @@ Add the Connection String used to connect to your MongoDB Atlas instance:
 - Create and use a database named `saas_bed_portfolio_2025s2`.
 
 > ```js
-> 	CREATE_AND_USE_DATABASE_IN_MONGODB_ANSWER_HERE
+> 	use saas_bed_portfolio_2025s2
 > ```
 
 Did you encounter any issues when creating the database? If you did, how did you resolve them?
 
-> ANSWER_HERE
->
+> No issues were encountered. In MongoDB, the `use` command switches to a specified database but does not create it on disk immediately. The database is only physically created when the first document is inserted into a collection within it. This "lazy creation" approach is seamless and does not produce errors.
 
 ### 3.3 Collection Creation
 
 - Create a new collection named _movies_ and insert the provided data (full statement)
 
 > ```js
-> 	CREATE_COLLECTION_IN_MONGODB_ANSWER_HERE
+> db.movies.insertMany([
+>   {
+>     "title": "The Lord of the Rings: The Fellowship of the Ring",
+>     "writer": "J.R.R. Tolkien",
+>     "year": 2001,
+>     "franchise": "The Lord of the Rings"
+>   },
+>   {
+>     "title": "The Lord of the Rings: The Two Towers",
+>     "writer": "J.R.R. Tolkien",
+>     "year": 2002,
+>     "franchise": "The Lord of the Rings"
+>   }
+> ]);
 > ```
 
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 3.3](./assets/step-3-3.png)
 
 
 
@@ -284,7 +308,28 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+db.movies.insertMany([
+  {
+    title: "Avatar",
+    writers: ["James Cameron"],
+    yearReleased: 2009,
+    runningTime: "162 minutes",
+    budget: "$237 million"
+  },
+  {
+    title: "Fictionally Fake Film"
+  },
+  {
+    title: "Little Shop of Horrors",
+    writers: ["Howard Ashman", "Charles B. Griffith"],
+    yearReleased: 1986,
+    boxOffice: "$54 million"
+  },
+  {
+    title: "You Cannae be Serious About a Fictional Film"
+  }
+]);
+
 ```
 
 
@@ -318,7 +363,13 @@ Add the provided additional sample data into the movies collection in the order 
 Query Solution:
 
 ```js
-	db.collection_name.find();
+db.movies.find().pretty()
+```
+
+Screen Shot:
+
+![Screenshot for question 5.1](./assets/step-5-1.png)
+
 ```
 	
 ## 5.2 Retrieve all films written by…
@@ -328,12 +379,12 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ writers: "Quentin Tarantino" }).pretty()
 ```
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 5.2](./assets/step-5-2.png)
 
 ## 5.3 Retrieve films with actor(s)…
 
@@ -342,9 +393,13 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ actors: "Brad Pitt" }).pretty()
 ```
-	
+
+Screen Shot:
+
+![Screenshot for question 5.3](./assets/step-5-3.png)
+
 ## 5.4 Retrieve films from a franchise…
 
 - Get all documents with `franchise` set to "`The Hobbit`"
@@ -352,9 +407,13 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ franchise: "The Hobbit" }).pretty()
 ```
-	
+
+Screen Shot:
+
+![Screenshot for question 5.4](./assets/step-5-4.png)
+
 ## 5.5 Retrieve films before/after…
 
 - Get all movies released before `1970` or after `2020`
@@ -362,12 +421,13 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ $or: [ { yearReleased: { $lt: 1970 } }, { yearReleased: { $gt: 2020 } } ] }).pretty()
+
 ```
 	
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 5.5](./assets/step-5-5.png)
 
 ## 5.6 Retrieve films longer than…
 
@@ -376,9 +436,12 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ runningTime: { $gt: 120 } }).pretty()
 ```
 
+Screen Shot:
+
+![Screenshot for question 5.6](./assets/step-5-6.png)
 
 # Step 6: CRUD - Updates
 
@@ -387,9 +450,22 @@ Query Solution:
 - Using one or more queries, add the provided synopses to the indicated movies.
 
 Query Solution:
+// Add synopsis for "The Hobbit: The Desolation of Smaug"
+db.movies.updateOne(
+  { title: "The Hobbit: The Desolation of Smaug" },
+  { $set: { synopsis: "The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring." } }
+)
+
+// Add synopsis for "The Hobbit: An Unexpected Journey"
+db.movies.updateOne(
+  { title: "The Hobbit: An Unexpected Journey" },
+  { $set: { synopsis: "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug." } }
+)
+
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ title: /Hobbit/ }, { title: 1, synopsis: 1 }).pretty()
+
 ```
 	
 ## 6.2 Update document with an actor
@@ -397,14 +473,57 @@ Query Solution:
 - Add the provided actors to the required films using one or more queries in the order provided...
 
 Query Solution:
+// Ensure 'actors' field is an array for Pulp Fiction
+db.movies.updateOne(
+  { title: "Pulp Fiction" },
+  { $set: { actors: [] } }
+)
+
+// Add Samuel L. Jackson to Pulp Fiction
+db.movies.updateOne(
+  { title: "Pulp Fiction" },
+  { $addToSet: { actors: "Samuel L. Jackson" } }
+)
+
+// Ensure 'actors' field is an array for Star Trek VI
+db.movies.updateOne(
+  { title: "Star Trek VI: The Undiscovered Country" },
+  { $set: { actors: [] } }
+)
+
+// Add first group of actors
+db.movies.updateOne(
+  { title: "Star Trek VI: The Undiscovered Country" },
+  { $addToSet: { actors: { $each: ["William Shatner", "Leonard Nimoy", "DeForest Kelley", "James Doohan", "Christopher Plummer"] } } }
+)
+
+// Add second group of actors
+db.movies.updateOne(
+  { title: "Star Trek VI: The Undiscovered Country" },
+  { $addToSet: { actors: { $each: ["Walter Koenig", "Nichelle Nichols", "George Takei", "Kim Cattrall", "David Warner"] } } }
+)
+
+// Ensure 'actors' field is an array for Star Trek: Nemesis
+db.movies.updateOne(
+  { title: "Star Trek: Nemesis" },
+  { $set: { actors: [] } }
+)
+
+// Add actors for Star Trek: Nemesis
+db.movies.updateOne(
+  { title: "Star Trek: Nemesis" },
+  { $addToSet: { actors: { $each: ["Patrick Stewart", "Jonathan Frakes", "Brent Spiner", "LeVar Burton", "Michael Dorn", "Gates McFadden", "Marina Sirtis"] } } }
+)
+
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ title: /Pulp Fiction|Star Trek/ }, { title: 1, actors: 1 }).pretty()
+
 ```
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 6.2](./assets/step-6-2.png)
 
 
 # Step 7: CRUD – Searches
@@ -418,12 +537,12 @@ Performing searches on collections.
 Query Solution:
 
 ```js
-	db.collection_name.find();
+db.movies.find({ title: /^L/ }, { title: 1 }).pretty()
 ```
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 7.1](./assets/step-7-1.png)
 
 ## 7.2 Searching for synopses with …
 
@@ -432,12 +551,13 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ synopsis: /space/i }, { title: 1, synopsis: 1 }).pretty()
+
 ```
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 7.2](./assets/step-7-2.png)
 
 ## 7.3 Searching for synopses with… and not …
 
@@ -446,12 +566,13 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ synopsis: /Bilbo/i, synopsis: { $not: /Gandalf/i } }, { title: 1, synopsis: 1 }).pretty()
+
 ```
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 7.3](./assets/step-7-3.png)
 
 ## 7.4 Searching for synopses with … or …
 
@@ -460,12 +581,13 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.find({ $or: [{ synopsis: /Klingon/i }, { synopsis: /Romulan/i }] }, { title: 1, synopsis: 1 }).pretty()
+
 ```
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 7.4](./assets/step-7-4.png)
 
 ## 7.5 Searching for synopses with … and …
 
@@ -474,12 +596,13 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+db.movies.find({ synopsis: /gold/i, synopsis: /dragon/i }, { title: 1, synopsis: 1 }).pretty()
+
 ```
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 7.5](./assets/step-7-5.png)
 
 
 # Step 8: CRUD - Deletions
@@ -498,7 +621,7 @@ Query Solution:
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 8.1](./assets/step-8-1.png)
 
 ## 8.2 Remove a movie by ID…
 
@@ -515,7 +638,7 @@ Query Solution:
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 8.2](./assets/step-8-2.png)
 
 ## 8.3 Removing multiple movies…
 
@@ -529,7 +652,7 @@ Query Solution:
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 8.3](./assets/step-8-3.png)
 
 
 # Step 9: NoSQL Indexes
@@ -562,6 +685,8 @@ Query Solution:
 
 ```js
 	db.collection_name.find();
+
+  ![Screenshot for question 9.1](./assets/step-9-1.png)
 ```
 
 ## 9.2 Indexes for Full Text Search
@@ -587,7 +712,7 @@ Query Solution:
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 9.3](./assets/step-9-3.png)
 
 
 
@@ -636,7 +761,7 @@ Query Solution:
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 10.3](./assets/step-10-3.png)
 
 ## 10.4 Grouping data
 
@@ -684,7 +809,7 @@ Query Solution:
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 11.3](./assets/step-11-3.png)
 
 ## 11.4 Testing the update trigger works correctly
 
@@ -728,7 +853,7 @@ Query Solution:
 
 Screen Shot:
 
-![Step 3.3 Screenshot](assets/SCREENSHOT_FILENAME_HERE.png)
+![Screenshot for question 11.7](./assets/step-11-7.png)
 
 
 # Step 12: Submission
