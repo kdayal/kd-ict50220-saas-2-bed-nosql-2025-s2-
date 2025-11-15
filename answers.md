@@ -916,10 +916,10 @@ exports = function(changeEvent) {
 Query Solution:
 
 ```js
-// Insert a dummy movie to delete
+
 db.movies.insertOne({ title: "Dummy Movie", writer: "Test Writer", yearReleased: 2025 });
 
-// Delete the dummy movie
+
 db.movies.deleteMany({ title: /Dummy/ });
 
 ```
