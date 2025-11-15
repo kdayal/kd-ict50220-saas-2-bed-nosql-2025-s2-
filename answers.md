@@ -14,7 +14,7 @@ Replace GIVEN_NAME_HERE, FAMILY_NAME_HERE and STUDENT_ID_HERE entries with your 
 
 | Given Name      | Family Name      | Student ID      |
 |-----------------|------------------|-----------------|
-| Anna            | Seed             | x1234567890     |
+| Khushboo        | Dayal            | 20128654         |     |
 | GIVEN_NAME_HERE | FAMILY_NAME_HERE | STUDENT_ID_HERE |
 
 
@@ -124,7 +124,7 @@ This step provides a checklist for yout to ensure you have set up the assessment
 Put an X between each of the pairs of `[ ]` when you have completed the task:
 
 > - [ ] Create a new **empty** & **private** repository on GitHub (or the equivalent).
-> - [ ] Repository is named `xxx-ICT50220-SaaS-2-BED-NoSQL` replacing `xxx` with your initials.
+> - [ ] Repository is named `kd-ICT50220-SaaS-2-BED-NoSQL` replacing `xxx` with your initials.
 > - [ ] Cloned the repository to your local PC.
 > - [ ] Created a new folder called `assets` inside your cloned repository.
 > - [ ] Created an empty `ReadMe.md`.
@@ -203,14 +203,14 @@ Briefly outline the key features and advantages for TWO of the following NoSQL d
 - Wide-Column Oriented Database
 - Graph Database
 
-> ### Database Type 1: NAME_HERE
+> ### Database Type 1: Document Database
 >
->  ANSWER_HERE
+>  Stores data as JSON-like documents; flexible schema. Useful for unstructured data like movies or blogs.
 
 
-> ### Database Type 2: NAME_HERE
+> ### Database Type 2: Key-Value Store
 >
-> ANSWER_HERE 
+>Stores data as key-value pairs; highly performant for caching or session storage.
 
 
 ## 2.5 NoSQL Database Systems
@@ -219,14 +219,14 @@ Provide one example product (commercial or open source) for each of your NoSQL N
 
 You may **NOT** include _MongoDB_ which is an example of a _Document Database_.
 
-> ### Database Type 1: NAME_HERE
+> ### Database Type 1: Document Database
 >
-> ANSWER_HERE
+> CouchDB, Firebase Firestore
 
 
-> ### Database Type 2: NAME_HERE
+> ### Database Type 2:Key-Value Store
 >
-> ANSWER_HERE
+> Redis, Amazon DynamoDB
 
 
 ## 2.6 NoSQL Database Uses
@@ -235,14 +235,14 @@ Provide an example for each of your NoSQL database of the situation when your da
 
 The situations/application of the database types must be different.
 
-> ### Database Type 1: NAME_HERE
+> ### Database Type 1:Document Database
 >
-> ANSWER_HERE
+> Useful for storing movie collections, product catalogs, or user profiles.
 
 
-> ### Database Type 2: NAME_HERE
+> ### Database Type 2: Key-Value Store
 >
-> ANSWER_HERE
+> Ideal for caching frequent queries, session management, or leaderboard storage.
 
 
 
@@ -344,7 +344,8 @@ What was the complete command you used to perform the import of the provided sam
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	mongoimport --db saas_bed_portfolio_2025s2 --collection movies --type csv --file movie_data.csv --headerline
+
 ```
 
 ## 4.3 Inserting Data
@@ -380,6 +381,7 @@ Query Solution:
 
 ```js
 	db.movies.find({ writers: "Quentin Tarantino" }).pretty()
+
 ```
 
 Screen Shot:
@@ -449,22 +451,12 @@ Screen Shot:
 
 - Using one or more queries, add the provided synopses to the indicated movies.
 
-Query Solution:
-// Add synopsis for "The Hobbit: The Desolation of Smaug"
-db.movies.updateOne(
-  { title: "The Hobbit: The Desolation of Smaug" },
-  { $set: { synopsis: "The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring." } }
-)
-
-// Add synopsis for "The Hobbit: An Unexpected Journey"
-db.movies.updateOne(
-  { title: "The Hobbit: An Unexpected Journey" },
-  { $set: { synopsis: "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug." } }
-)
-
-
 ```js
-	db.movies.find({ title: /Hobbit/ }, { title: 1, synopsis: 1 }).pretty()
+	db.movies.updateOne({ title: "The Hobbit: The Desolation of Smaug" }, { $set: { synopsis: "The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring." } });
+
+db.movies.updateOne({ title: "The Hobbit: An Unexpected Journey" }, { $set: { synopsis: "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug." } });
+
+db.movies.find({ title: /Hobbit/ }, { title: 1, synopsis: 1 }).pretty()
 
 ```
 	
@@ -473,50 +465,36 @@ db.movies.updateOne(
 - Add the provided actors to the required films using one or more queries in the order provided...
 
 Query Solution:
-// Ensure 'actors' field is an array for Pulp Fiction
-db.movies.updateOne(
-  { title: "Pulp Fiction" },
-  { $set: { actors: [] } }
-)
-
-// Add Samuel L. Jackson to Pulp Fiction
-db.movies.updateOne(
-  { title: "Pulp Fiction" },
-  { $addToSet: { actors: "Samuel L. Jackson" } }
-)
-
-// Ensure 'actors' field is an array for Star Trek VI
-db.movies.updateOne(
-  { title: "Star Trek VI: The Undiscovered Country" },
-  { $set: { actors: [] } }
-)
-
-// Add first group of actors
-db.movies.updateOne(
-  { title: "Star Trek VI: The Undiscovered Country" },
-  { $addToSet: { actors: { $each: ["William Shatner", "Leonard Nimoy", "DeForest Kelley", "James Doohan", "Christopher Plummer"] } } }
-)
-
-// Add second group of actors
-db.movies.updateOne(
-  { title: "Star Trek VI: The Undiscovered Country" },
-  { $addToSet: { actors: { $each: ["Walter Koenig", "Nichelle Nichols", "George Takei", "Kim Cattrall", "David Warner"] } } }
-)
-
-// Ensure 'actors' field is an array for Star Trek: Nemesis
-db.movies.updateOne(
-  { title: "Star Trek: Nemesis" },
-  { $set: { actors: [] } }
-)
-
-// Add actors for Star Trek: Nemesis
-db.movies.updateOne(
-  { title: "Star Trek: Nemesis" },
-  { $addToSet: { actors: { $each: ["Patrick Stewart", "Jonathan Frakes", "Brent Spiner", "LeVar Burton", "Michael Dorn", "Gates McFadden", "Marina Sirtis"] } } }
-)
-
 
 ```js
+	// Add Samuel L. Jackson to Pulp Fiction
+	db.movies.updateOne(
+	  { title: "Pulp Fiction" },
+	  { $addToSet: { actors: "Samuel L. Jackson" } }
+	)
+
+	// Add multiple actors to Star Trek VI
+	db.movies.updateOne(
+	  { title: "Star Trek VI: The Undiscovered Country" },
+	  { $addToSet: { 
+		  actors: { 
+			$each: [
+			  "William Shatner", "Leonard Nimoy", "DeForest Kelley", 
+			  "James Doohan", "Christopher Plummer", "Walter Koenig", 
+			  "Nichelle Nichols", "George Takei", "Kim Cattrall", "David Warner"
+			] 
+		  } 
+		} 
+	  }
+	)
+
+	// Add actors for Star Trek: Nemesis
+	db.movies.updateOne(
+	  { title: "Star Trek: Nemesis" },
+	  { $addToSet: { actors: { $each: ["Patrick Stewart", "Jonathan Frakes", "Brent Spiner", "LeVar Burton", "Michael Dorn", "Gates McFadden", "Marina Sirtis"] } } }
+	)
+
+	// Verification query
 	db.movies.find({ title: /Pulp Fiction|Star Trek/ }, { title: 1, actors: 1 }).pretty()
 
 ```
@@ -616,7 +594,8 @@ This step requires you to remove movies from the collection.
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.deleteOne({ title: "Pee Wee Herman's Big Adventure" });
+
 ```
 
 Screen Shot:
@@ -633,7 +612,9 @@ Delete the movie “`Yet Another Fake Film Name`” by:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	const doc = db.movies.findOne({ title: "Yet Another Fake Film Name" });
+db.movies.deleteOne({ _id: doc._id });
+
 ```
 
 Screen Shot:
@@ -647,7 +628,8 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.deleteMany({ title: /Fictional/ });
+
 ```
 
 Screen Shot:
@@ -666,7 +648,8 @@ Using the movies collection, create the indexes to match the following condition
 Query Solution:
 
 ```js
-	db.collection_name.find();
+		db.collection_name.find();
+
 ```
 
 
@@ -675,7 +658,7 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.createIndex({ yearReleased: 1, title: 1 });
 ```
 
 - Create an index on the `franchise`, `title`, `actors`, `year` fields.
@@ -684,10 +667,13 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.createIndex({ yearReleased: 1, title: 1, actors: 1, franchise: 1 });
 
-  ![Screenshot for question 9.1](./assets/step-9-1.png)
-```
+ ```
+ Screen Shot:
+
+![Screenshot for question 8.3](./assets/step-9-1.png)
+
 
 ## 9.2 Indexes for Full Text Search
 
@@ -696,7 +682,8 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.createIndex({ title: "text", franchise: "text" });
+
 ```
 
 
@@ -707,7 +694,8 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+db.movies.find({ $text: { $search: "Star" } }).explain("executionStats");
+
 ```
 
 Screen Shot:
@@ -720,12 +708,10 @@ Screen Shot:
 
 - Briefly explain the differences between an index for sorting against an index for full text searches.
 
-> ANSWER_HERE
->
-> 
+>Index for sorting arranges documents to allow fast ordered retrieval.
+Text indexes enable fast searching of string content within fields, including partial matches and keyword searches.
 
-
-# Step 10: Aggregation
+ # Step 10: Aggregation
 
 In this step you will be aggregating data within a collection.
 
@@ -733,10 +719,14 @@ In this step you will be aggregating data within a collection.
 
 - Write an aggregation query to count the number of `Star Wars` movies.
 
+
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.aggregate([
+  { $match: { title: /Star Wars/i } },
+  { $count: "starWarsCount" }
+])
 ```
 
 ## 10.2 Mean box office takings…
@@ -746,7 +736,15 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+db.movies.aggregate([
+  {
+    $group: {
+      _id: null,
+      avgBoxOffice: { $avg: "$boxOfficeNum" }
+    }
+  }
+])
+
 ```
 
 ## 10.3 Profit earnings
@@ -756,7 +754,15 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.aggregate([
+  {
+    $project: {
+      title: 1,
+      profit: { $subtract: ["$boxOfficeNum", "$budgetNum"] }
+    }
+  }
+])
+
 ```
 
 Screen Shot:
@@ -770,7 +776,18 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+db.movies.aggregate([
+  {
+    $group: {
+      _id: "$franchise",
+      movieCount: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { movieCount: -1 }
+  }
+])
+
 ```
 
 # Step 11: Triggers
@@ -784,7 +801,22 @@ Using the movies collection, we are now going to create triggers to provide an a
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	exports = function(changeEvent) {
+  const audit = context.services
+    .get("mongodb-atlas")
+    .db("practice_films")
+    .collection("movie_audit");
+
+  const fullDocument = changeEvent.fullDocument;
+
+  return audit.insertOne({
+    action: "INSERT",
+    action_date: new Date(),
+    original_data: fullDocument
+  });
+};
+
+
 ```
 
 ## 11.2 Testing the insert trigger works correctly
@@ -794,7 +826,21 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movies.insertOne({
+  title: "Jeffrey",
+  writer: "Paul Rudnick",
+  yearReleased: 1995,
+  actors: [
+    "Sigourney Weaver",
+    "Patrick Stewart",
+    "Michael T. Weiss",
+    "Steven Weber",
+    "Bryan Batt"
+  ],
+  boxOffice: "$3.5 million",
+  runningTime: "92 mins"
+});
+
 ```
 
 ## 11.3 Create trigger for updated data
@@ -804,7 +850,20 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	exports = function(changeEvent) {
+  const audit = context.services
+    .get("mongodb-atlas")
+    .db("practice_films")
+    .collection("movie_audit");
+
+  return audit.insertOne({
+    action: "UPDATE",
+    action_date: new Date(),
+    original_data: changeEvent.fullDocumentBeforeChange,
+    data: changeEvent.updateDescription.updatedFields
+  });
+};
+
 ```
 
 Screen Shot:
@@ -818,7 +877,12 @@ Screen Shot:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+
+db.movies.updateOne(
+  { _id: ObjectId("6915be985ca8226e2c63b114") },
+  { $set: { writer: "Paul Rudnick" } }
+);
+
 ```
 
 ## 11.5 Create trigger for deleted data
@@ -828,7 +892,21 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+exports = function(changeEvent) {
+  const audit = context.services
+    .get("mongodb-atlas")
+    .db("practice_films")
+    .collection("movie_audit");
+    .db("saas_bed_portfolio_2025s2")
+    .collection("movie_audit_log");
+
+  return audit.insertOne({
+    action: "DELETE",
+    action_date: new Date(),
+    original_data: changeEvent.fullDocument
+  });
+};
+
 ```
 
 ## 11.6 Testing the delete trigger works correctly
@@ -838,7 +916,12 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+// Insert a dummy movie to delete
+db.movies.insertOne({ title: "Dummy Movie", writer: "Test Writer", yearReleased: 2025 });
+
+// Delete the dummy movie
+db.movies.deleteMany({ title: /Dummy/ });
+
 ```
 
 ## 11.7 Verify the log contains data…
@@ -848,7 +931,8 @@ Query Solution:
 Query Solution:
 
 ```js
-	db.collection_name.find();
+	db.movie_audit.find().pretty()
+
 ```
 
 Screen Shot:
@@ -861,7 +945,7 @@ Screen Shot:
 What is the URL for your GitHub (or equivalent) repository for this assessment?
 
 ```text
-add url here
+https://github.com/kdayal/kd-ict50220-saas-2-bed-nosql-2025-s2-
 ```
 
 # END
